@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#293746"><meta name="description" content="Учебная MES: трёхмерный цех, оборудование, контроль отклонений и производственный журнал.">
+<title>Цех 01 — SmartFactory MES</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%232b425b'/%3E%3Cpath d='M6 25V13l7 4V10l7 4V6h6v19Z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css"><script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script></head>
+<body>
+<header class="app-header"><div class="wordmark"><span class="brand-icon" aria-hidden="true">▥</span><strong>SmartFactory <span>MES</span></strong></div><span class="header-location">Производство / Механический цех 01</span><div class="header-right"><span class="demo-label">Учебная модель</span><time id="clock">08:00:00</time></div></header>
+<main>
+<div class="page-heading"><div><h1>Диспетчерская цеха</h1><p>Автоматическая линия / сквозной паллетный транспорт</p></div><div class="run-controls"><label for="speed">Скорость</label><select id="speed" aria-label="Скорость"><option value="1">×1</option><option value="5" selected>×5</option><option value="15">×15</option></select><button id="pause">Пауза</button></div></div>
+<section class="kpis" aria-label="Показатели смены">
+<article><span>Выполнение задания</span><div><strong id="plan">68,0</strong><small>%</small></div><p id="planDetail">408 из 600 годных деталей</p><progress id="planBar" max="600" value="408"></progress></article>
+<article><span>Оценка OEE</span><div><strong id="oee">—</strong><small>%</small></div><p id="oeeDetail">Доступность × темп × качество</p></article>
+<article><span>Расчётный темп</span><div><strong id="rate">—</strong><small>дет./ч</small></div><p>Номинальный темп: 52 дет./ч</p></article>
+<article><span>Доля брака</span><div><strong id="reject">—</strong><small>%</small></div><p id="rejectDetail">8 из 416 обработанных</p></article>
+<article><span>Активные отклонения</span><div><strong id="alarms">0</strong><small>событий</small></div><p id="alarmDetail">Параметры в пределах нормы</p></article>
+</section>
+<section class="main-grid">
+<div class="scene-panel">
+<div class="panel-heading"><div><strong>Технологическая линия</strong><span class="subtle">П-образная компоновка</span></div><div class="view-tools"><button id="overview" class="selected" aria-pressed="true">Общий вид</button><button id="topview" aria-pressed="false">Сверху</button><button id="focus" title="Приблизить выбранное оборудование">К станку</button><button id="cutaway" aria-pressed="false">Разрез</button></div></div>
+<ol class="process-route" aria-label="Последовательность операций"><li id="route-CNC-01"><b>01 · Точение</b><small>загрузка</small></li><li id="route-CNC-02"><b>02 · Фрезеровка</b><small>загрузка</small></li><li id="route-CNC-03"><b>03 · Сверление</b><small>загрузка</small></li><li id="route-QC-01"><b>04 · Контроль</b><small>загрузка</small></li><li id="route-PACK-01"><b>05 · Упаковка</b><small>загрузка</small></li><li id="route-STORE"><b>06 · Приёмка</b><small>загрузка</small></li></ol>
+<div id="scene"><div id="labels"></div><div class="scene-note">ЛКМ — вращать · ПКМ — перемещать · колесо — масштаб</div><div id="loadError" hidden>Не удалось запустить 3D. Для просмотра нужен браузер с WebGL2.</div><div class="orientation" aria-hidden="true"><span class="axis-z">Y</span><span class="axis-y">Z</span><span class="axis-x">X</span></div></div>
+<div class="scene-footer"><div class="legend"><span><i class="dot run"></i>Работа</span><span><i class="dot idle"></i>Ожидание</span><span><i class="dot warning"></i>Внимание</span><span><i class="dot critical"></i>Останов</span></div><span id="flowState">12 паллет на линии</span><span id="simulationState">Симуляция запущена · ×5</span></div>
+<div class="scenario-strip"><label for="scenario">Режим проверки</label><select id="scenario"><option value="normal">Нормальная работа</option><option value="heat">Перегрев шпинделя CNC-02</option><option value="bottleneck">Очередь на контроле QC-01</option><option value="defect">Отклонение размера CNC-03</option></select><span>События вводятся в учебную модель</span></div>
+</div>
+<aside class="equipment-panel"><div class="panel-heading"><strong>Оборудование</strong><span id="assetTag" class="subtle">М-102</span></div><div class="asset-details">
+<div class="asset-heading"><span id="assetId">CNC-02</span><span id="assetState" class="status-tag run">В работе</span></div><h2 id="assetName">Вертикальный фрезерный центр</h2><p id="assetDescription">3 оси · шпиндель BT40 · стол 800 × 450 мм</p><div id="assetParts" class="part-note">Корпус, направляющие, рабочий стол и шпиндель</div>
+<dl class="parameters"><div><dt>Операция</dt><dd id="operation">Фрезерование паза</dd></div><div><dt>Загрузка</dt><dd id="load">86%</dd></div><div><dt>Температура узла</dt><dd id="temp">64 °C</dd></div><div><dt>Длительность цикла</dt><dd id="cycle">4:32</dd></div><div><dt>Мощность</dt><dd id="power">8,4 кВт</dd></div><div><dt>Очередь на входе</dt><dd id="queue">2 дет.</dd></div></dl>
+<div class="trend-heading"><span>Температура, °C</span><span>60 отсчётов</span></div><canvas id="trend" aria-label="График температуры выбранного оборудования"></canvas>
+<div id="diagnostic" class="diagnostic"><strong id="diagnosticTitle">Отклонений нет</strong><p id="diagnosticText">Параметры находятся в пределах рабочего режима.</p><button id="resolve" hidden>Применить действие</button></div>
+</div><div class="model-note">Учебные проходные ячейки. Паллеты проходят все операции с остановкой на обработку. Параметры и геометрия условные.</div></aside>
+</section>
+<section class="records-panel"><div class="records-heading"><div class="tabs" role="tablist" aria-label="Данные участка"><button id="equipmentTab" role="tab" aria-selected="true" aria-controls="equipmentView" class="active">Состояние оборудования <span>6</span></button><button id="eventsTab" role="tab" aria-selected="false" aria-controls="eventsView">Журнал событий <span id="eventCount">3</span></button></div><span class="subtle">Выберите строку, чтобы осмотреть станок</span></div>
+<div id="equipmentView" role="tabpanel" aria-labelledby="equipmentTab" class="table-scroll"><table><thead><tr><th>Код / оборудование</th><th>Состояние</th><th>Текущая операция</th><th>Загрузка</th><th>Температура</th><th>Цикл</th><th>Очередь</th></tr></thead><tbody id="equipmentRows"></tbody></table></div>
+<div id="eventsView" role="tabpanel" aria-labelledby="eventsTab" class="table-scroll" hidden><table><thead><tr><th>Время модели</th><th>Тип</th><th>Оборудование</th><th>Событие</th></tr></thead><tbody id="eventRows"></tbody></table></div>
+</section>
+<footer class="page-footer"><span>SmartFactory MES / прототип 0.3</span><span>Все данные демонстрационные · обновление раз в секунду</span></footer>
+</main><div id="toast" role="status" aria-live="polite"></div><script type="module" src="app.js"></script>
+</body></html>
